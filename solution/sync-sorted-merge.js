@@ -1,20 +1,8 @@
 "use strict";
+
 // Print all entries, across all of the sources, in chronological order.
 
-function getPositionIndex(array, value) {
-  let low = 0;
-  let high = array.length;
-
-  while (low < high) {
-    let mid = (low + high) >>> 1;
-    if (array[mid].date < value) {
-      low = mid + 1;
-    } else {
-      high = mid;
-    }
-  }
-  return low;
-}
+const { getPositionIndex } = require("./utils");
 
 module.exports = (logSources, printer) => {
   const mergedEntries = [];
@@ -34,5 +22,6 @@ module.exports = (logSources, printer) => {
     printer.print(entry);
   });
 
-  return printer.done();
+  printer.done();
+  return console.log("Sync sort complete.");
 };
