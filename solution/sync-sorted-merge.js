@@ -17,15 +17,22 @@ function getPositionIndex(array, value) {
 }
 
 module.exports = (logSources, printer) => {
-  const logEntries = [];
-  let logEntry = logSources.pop();
-  while (logEntry) {
-    const newIndex = getPositionIndex(logEntries, logEntry.last.date);
-    logEntries.splice(newIndex, 0, logEntry.last);
-    logEntry = logSources.pop();
-  }
-  logEntries.forEach((logEntry) => {
-    printer.print(logEntry);
+  const mergedEntries = [];
+
+  logSources.forEach((logSource) => {
+    let logEntry = logSource.pop();
+
+    while (logEntry) {
+      const entryIndex = getPositionIndex(mergedEntries, logEntry.date);
+      mergedEntries.splice(entryIndex, 0, logEntry);
+
+      logEntry = logSource.pop();
+    }
   });
+
+  mergedEntries.forEach((entry) => {
+    printer.print(entry);
+  });
+
   return printer.done();
 };
